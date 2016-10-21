@@ -1,4 +1,4 @@
-# ssh_script
+# ssh_scripts
 Scripts to make it easier to generate ssh keys and a config file
 
 ### ssh-gen
