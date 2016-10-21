@@ -1,0 +1,41 @@
+#!/bin/bash
+# Checking if .ssh directory exists
+if ! [ -d ~/.ssh ]; then
+    mkdir ~/.ssh
+elif ! [ -f ~/.ssh/config ]; then 
+    touch ~/.ssh/config
+fi
+
+if [ -w ~/.ssh/config ]; then # Checks if config file is writable
+  : # : = do nothing
+else
+  echo "Can't write to ~/.ssh/config. Try running the script with 'sudo'."
+fi
+
+echo "Type in the Host, followed by [ENTER]:"
+read host
+echo "Type in the Host Name, followed by [ENTER]:"
+read hostName
+echo "Type in the Port, followed by [ENTER]:"
+read port
+echo "Type in the User Name, followed by [ENTER]:"
+read userName
+echo "Type in Private Key Name, followed by [ENTER]: "
+read privateKey
+
+function writeConfig(){
+  whiteSpace='    ' # Add white space to make config file neater
+  if [[ -z "$1" || -z "$2" ]]; then
+    :
+  elif [ $2 == $host ]; then
+      echo $1 >> ~/.ssh/config
+  else
+      echo "${whiteSpace}"$1 >> ~/.ssh/config
+  fi
+}
+
+writeConfig "Host $host" $host
+writeConfig "HostName $hostName" $hostName
+writeConfig "Port $port" $port
+writeConfig "User $userName" $userName
+writeConfig "IdentityFile ~/.ssh/$privateKey" $privateKey
