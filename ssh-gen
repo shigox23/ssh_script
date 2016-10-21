@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Type in your email, followed by [ENTER]:"
+read email
+echo "Type in your passcode, followed by [ENTER]:"
+read -s pass
+echo "Type in your key name, followed by [ENTER]:"
+read key
+
+echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -C "$email" -N "$pass" -f ~/.ssh/$key
+ssh-add ~/.ssh/$key
+echo "Added to ssh-agent"
+read -p "If you would like to upload your key to remote location please provide it below:" remote
+
+if [[ -z "$remote" ]]; then
+    echo "No remote location added"
+    exit 1
+else
+    cat ~/.ssh/$key.pub | ssh $remote 'cat >> ~/.ssh/authorized_keys' && rm  ~/.ssh/$key.pub
+    echo "Remote location added & pub key removed from local machine"
+fi
