@@ -1,4 +1,12 @@
 #!/bin/bash
+# Checking if .ssh directory exists
+if [ -d "~/.ssh" ]; then
+    :
+  else
+    mkdir ~/.ssh
+    echo "Generated .ssh directory"
+fi
+
 echo "Type in your email, followed by [ENTER]:"
 read email
 echo "Type in your passcode, followed by [ENTER]:"
@@ -6,12 +14,12 @@ read -s pass
 echo "Type in your key name, followed by [ENTER]:"
 read key
 
-echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -C "$email" -N "$pass" -f ~/.ssh/$key
+echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -C "$email" -N "$pass" -f ~/.ssh/$key # The echo part allows multiple variables to be passed to a prompt based script
 ssh-add ~/.ssh/$key
 echo "Added to ssh-agent"
 read -p "If you would like to upload your key to remote location please provide it below:" remote
 
-if [[ -z "$remote" ]]; then
+if [[ -z "$remote" ]]; then # The -z checks to see if variable is empty
     echo "No remote location added"
     exit 1
 else
@@ -20,7 +28,7 @@ else
     echo "Testing ssh key"
     test_ssh=$(ssh -o BatchMode=yes -o ConnectTimeout=5 $remote echo success 2>&1)
     if [[ $test_ssh == success ]] ; then
-      echo Success, do something
+      echo Success!!
     elif [[ $test_ssh == "Permission denied"* ]] ; then
       echo Permision Denied
     else
