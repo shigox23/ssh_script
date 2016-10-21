@@ -17,4 +17,13 @@ if [[ -z "$remote" ]]; then
 else
     cat ~/.ssh/$key.pub | ssh $remote 'cat >> ~/.ssh/authorized_keys'
     echo "Remote location added"
+    echo "Testing ssh key"
+    test_ssh=$(ssh -o BatchMode=yes -o ConnectTimeout=5 $remote echo success 2>&1)
+    if [[ $test_ssh == success ]] ; then
+      echo Success, do something
+    elif [[ $test_ssh == "Permission denied"* ]] ; then
+      echo Permision Denied
+    else
+      echo Error
+    fi
 fi
