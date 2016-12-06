@@ -1,8 +1,19 @@
 #!/bin/bash
-# Checking if .ssh directory exists
+
+function writeConfig(){
+  whiteSpace='    ' # Add white space to make config file neater
+  if [[ -z "$2" ]]; then
+    :
+  elif [ $2 == $host ]; then
+      echo $1 >> ~/.ssh/config
+  else
+      echo "${whiteSpace}$1" >> ~/.ssh/config
+  fi
+}
+
 if ! [ -d ~/.ssh ]; then
     mkdir ~/.ssh
-elif ! [ -f ~/.ssh/config ]; then 
+elif ! [ -f ~/.ssh/config ]; then
     touch ~/.ssh/config
 fi
 
@@ -23,16 +34,6 @@ read userName
 echo "Type in Private Key Name, followed by [ENTER]: "
 read privateKey
 
-function writeConfig(){
-  whiteSpace='    ' # Add white space to make config file neater
-  if [[ -z "$1" || -z "$2" ]]; then
-    :
-  elif [ $2 == $host ]; then
-      echo $1 >> ~/.ssh/config
-  else
-      echo "${whiteSpace}"$1 >> ~/.ssh/config
-  fi
-}
 
 writeConfig "Host $host" $host
 writeConfig "HostName $hostName" $hostName
