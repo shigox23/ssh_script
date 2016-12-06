@@ -1,17 +1,16 @@
 #!/bin/bash
-
 function writeConfig(){
   whiteSpace='    ' # Add white space to make config file neater
-  if [[ -z "$2" ]]; then
+  if [[ -z "$2" ]]; then # Checks if variable is empty
     :
-  elif [ $2 == $host ]; then
+  elif [ $2 == $host ]; then # If variable is host no whitespace
       echo $1 >> ~/.ssh/config
   else
       echo "${whiteSpace}$1" >> ~/.ssh/config
   fi
 }
 
-if ! [ -d ~/.ssh ]; then
+if ! [ -d ~/.ssh ]; then # Checks if directory is empty
     mkdir ~/.ssh
 elif ! [ -f ~/.ssh/config ]; then
     touch ~/.ssh/config
