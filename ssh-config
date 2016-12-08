@@ -19,7 +19,7 @@ fi
 if [ -w ~/.ssh/config ]; then # Checks if config file is writable
   : # : = do nothing
 else
-  echo "Can't write to ~/.ssh/config. Try running the script with 'sudo'."
+  echo "Can't write to ~/.ssh/config. Fix permissions or run as sudo"
 fi
 
 echo "Type in the Host, followed by [ENTER]:"

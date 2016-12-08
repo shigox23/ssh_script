@@ -9,24 +9,28 @@ fi
 
 echo "Type in your email, followed by [ENTER]:"
 read email
-echo "Type in your passcode, followed by [ENTER]:"
-read -s pass
-echo "Type in your key name, followed by [ENTER]:"
+echo "Type in ssh key name, followed by [ENTER]:"
 read key
+echo "Type in passphrase, followed by [ENTER]:"
+read -s pass
 
+echo "Adding to ssh-agent"
 echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -C "$email" -N "$pass" -f ~/.ssh/$key # The echo part allows multiple variables to be passed to a prompt based script
 ssh-add ~/.ssh/$key
 echo "Added to ssh-agent"
-read -p "If you would like to upload your key to remote location please provide it below:" remote
+echo "If you would like to upload your key to remote location please provide it below:"
+read remote
+echo "Remote username"
+read user
 
-if [[ -z "$remote" ]]; then # The -z checks to see if variable is empty
+if [[ -z "$remote"]]; then # The -z checks to see if variable is empty
     echo "No remote location added"
     exit 1
 else
-    cat ~/.ssh/$key.pub | ssh $remote 'cat >> ~/.ssh/authorized_keys'
+    cat ~/.ssh/$key.pub | ssh $user@$remote 'cat >> ~/.ssh/authorized_keys'
     echo "Remote location added"
     echo "Testing ssh key"
-    testSsh=$(ssh -o BatchMode=yes -o ConnectTimeout=5 $remote echo success 2>&1)
+    testSsh=$(ssh -o BatchMode=yes -o ConnectTimeout=5 $user@$remote echo success 2>&1)
     if [[ $testSsh == success ]] ; then
       echo Success!!
     elif [[ $testSsh == "Permission denied"* ]] ; then
