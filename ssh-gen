@@ -1,8 +1,6 @@
 #!/bin/bash
 # Checking if .ssh directory exists
-if [ -d "~/.ssh" ]; then
-    :
-  else
+if [ ! -d "~/.ssh" ]; then
     mkdir ~/.ssh
     echo "Generated .ssh directory"
 fi
@@ -20,13 +18,9 @@ ssh-add ~/.ssh/$key
 echo "Added to ssh-agent"
 echo "If you would like to upload your key to remote location please provide it below:"
 read remote
-echo "Remote username"
-read user
-
-if [[ -z "$remote"]]; then # The -z checks to see if variable is empty
-    echo "No remote location added"
-    exit 1
-else
+if [[ $remote ]]; then # The -z checks to see if variable is empty
+    echo "Remote username"
+    read user
     cat ~/.ssh/$key.pub | ssh $user@$remote 'cat >> ~/.ssh/authorized_keys'
     echo "Remote location added"
     echo "Testing ssh key"
@@ -38,4 +32,7 @@ else
     else
       echo Error
     fi
+else
+  echo "No remote location added"
+  exit 1
 fi
