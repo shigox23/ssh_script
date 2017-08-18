@@ -22,9 +22,9 @@ else
   echo "Can't write to ~/.ssh/config. Fix permissions or run as sudo"
 fi
 
-echo "Type in the Host, followed by [ENTER]:"
-read host
 echo "Type in the Host Name, followed by [ENTER]:"
+read host
+echo "Type in the Host IP, followed by [ENTER]:"
 read hostName
 echo "Type in the Port, followed by [ENTER]:"
 read port

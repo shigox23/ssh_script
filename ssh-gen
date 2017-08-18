@@ -13,15 +13,16 @@ echo "Type in passphrase, followed by [ENTER]:"
 read -s pass
 
 echo "Adding to ssh-agent"
-echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -C "$email" -N "$pass" -f ~/.ssh/$key # The echo part allows multiple variables to be passed to a prompt based script
+# The echo part allows multiple variables to be passed to a prompt based script
+echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -C "$email" -N "$pass" -f ~/.ssh/$key
 ssh-add ~/.ssh/$key
 echo "Added to ssh-agent"
 echo "If you would like to upload your key to remote location please provide it below:"
 read remote
-if [[ $remote ]]; then # The -z checks to see if variable is empty
+if [[ $remote ]]; then
     echo "Remote username"
     read user
-    cat ~/.ssh/$key.pub | ssh $user@$remote 'cat >> ~/.ssh/authorized_keys'
+    cat ~/.ssh/$key.pub | ssh $user@$remote 'mkdir ~/.ssh;cat >> ~/.ssh/authorized_keys'
     echo "Remote location added"
     echo "Testing ssh key"
     testSsh=$(ssh -o BatchMode=yes -o ConnectTimeout=5 $user@$remote echo success 2>&1)
@@ -33,6 +34,6 @@ if [[ $remote ]]; then # The -z checks to see if variable is empty
       echo Error
     fi
 else
-  echo "No remote location added"
-  exit 1
+    echo "No remote location added"
+    exit 1
 fi
